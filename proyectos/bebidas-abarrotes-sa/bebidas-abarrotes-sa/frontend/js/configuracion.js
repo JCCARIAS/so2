@@ -1,17 +1,29 @@
 
 
+// =====================================
+// CONFIGURACION.JS
+// =====================================
+
 document.addEventListener(
     "DOMContentLoaded",
     () => {
 
-        iniciarConfiguracion();
+        console.log(
+            "Configuración cargada"
+        );
+
     }
 );
 
-function iniciarConfiguracion() {
+// =====================================
+// GUARDAR
+// =====================================
 
-    console.log(
-        "Configuración cargada"
+function guardarConfiguracion() {
+
+    alert(
+        "Configuración guardada"
     );
+
 }
     

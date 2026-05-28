@@ -1,156 +1,171 @@
 
 
-from flask import Flask, jsonify, request
-from flask_cors import CORS
-import mysql.connector
-import time
+// =====================================
+// USUARIOS.JS MYSQL REAL
+// =====================================
 
-app = Flask(__name__)
-CORS(app)
+document.addEventListener(
+    "DOMContentLoaded",
+    () => {
 
-# =========================================
-# ESPERAR MYSQL
-# =========================================
+        cargarUsuarios();
 
-db = None
+    }
+);
 
-while True:
+// =====================================
+// CARGAR USUARIOS
+// =====================================
 
-    try:
+async function cargarUsuarios() {
 
-        db = mysql.connector.connect(
-            host="mysql",
-            user="admin",
-            password="admin123",
-            database="empresa"
+    try {
+
+        const response =
+            await fetch("/api/usuarios");
+
+        const usuarios =
+            await response.json();
+
+        const tabla =
+            document.getElementById(
+                "tablaUsuarios"
+            );
+
+        tabla.innerHTML = "";
+
+        usuarios.forEach(usuario => {
+
+            tabla.innerHTML += `
+
+                <tr>
+
+                    <td>${usuario.id}</td>
+
+                    <td>${usuario.usuario}</td>
+
+                    <td>${usuario.rol}</td>
+
+                    <td>
+
+                        <button
+                            class="btn btn-primary"
+                            onclick="editarUsuario(${usuario.id})"
+                        >
+                            Editar
+                        </button>
+
+                        <button
+                            class="btn btn-danger"
+                            onclick="eliminarUsuario(${usuario.id})"
+                        >
+                            Eliminar
+                        </button>
+
+                    </td>
+
+                </tr>
+
+            `;
+
+        });
+
+    } catch (error) {
+
+        console.error(error);
+
+    }
+
+}
+
+// =====================================
+// AGREGAR USUARIO
+// =====================================
+
+async function agregarUsuario() {
+
+    const usuario =
+        document.getElementById(
+            "usuario"
+        ).value;
+
+    const rol =
+        document.getElementById(
+            "rol"
+        ).value;
+
+    const nuevoUsuario = {
+
+        usuario,
+        password: "1234",
+        rol
+
+    };
+
+    await fetch("/api/usuarios", {
+
+        method: "POST",
+
+        headers: {
+            "Content-Type": "application/json"
+        },
+
+        body: JSON.stringify(
+            nuevoUsuario
         )
 
-        print("MYSQL CONECTADO BACKEND 1")
+    });
 
-        break
+    cargarUsuarios();
 
-    except Exception as e:
+}
 
-        print("Esperando MySQL...")
-        print(e)
+// =====================================
+// ELIMINAR
+// =====================================
 
-        time.sleep(5)
+async function eliminarUsuario(id) {
 
-cursor = db.cursor(dictionary=True)
+    await fetch(`/api/usuarios/${id}`, {
 
-# =========================================
-# RUTA PRINCIPAL
-# =========================================
+        method: "DELETE"
 
-@app.route("/")
+    });
 
-def home():
+    cargarUsuarios();
 
-    return jsonify({
-        "mensaje": "Backend API 1 funcionando"
-    })
+}
 
-# =========================================
-# LOGIN
-# =========================================
+// =====================================
+// EDITAR
+// =====================================
 
-@app.route("/login", methods=["POST"])
+async function editarUsuario(id) {
 
-def login():
+    const usuario =
+        prompt("Nuevo usuario:");
 
-    data = request.json
+    const rol =
+        prompt("Nuevo rol:");
 
-    usuario = data.get("usuario")
-    password = data.get("password")
+    await fetch(`/api/usuarios/${id}`, {
 
-    sql = """
-        SELECT *
-        FROM usuarios
-        WHERE usuario=%s
-        AND password=%s
-    """
+        method: "PUT",
 
-    cursor.execute(sql, (usuario, password))
+        headers: {
+            "Content-Type": "application/json"
+        },
 
-    user = cursor.fetchone()
+        body: JSON.stringify({
 
-    if user:
+            usuario,
+            rol
 
-        return jsonify({
-            "success": True,
-            "usuario": user["usuario"],
-            "rol": user["rol"]
         })
 
-    return jsonify({
-        "success": False,
-        "mensaje": "Credenciales incorrectas"
-    }), 401
+    });
 
-# =========================================
-# USUARIOS
-# =========================================
+    cargarUsuarios();
 
-@app.route("/usuarios", methods=["GET"])
-
-def obtener_usuarios():
-
-    cursor.execute("SELECT id, usuario, rol FROM usuarios")
-
-    usuarios = cursor.fetchall()
-
-    return jsonify(usuarios)
-
-# =========================================
-# CLIENTES
-# =========================================
-
-@app.route("/clientes", methods=["GET"])
-
-def obtener_clientes():
-
-    cursor.execute("SELECT * FROM clientes")
-
-    clientes = cursor.fetchall()
-
-    return jsonify(clientes)
-
-# =========================================
-# PRODUCTOS
-# =========================================
-
-@app.route("/productos", methods=["GET"])
-
-def obtener_productos():
-
-    cursor.execute("SELECT * FROM productos")
-
-    productos = cursor.fetchall()
-
-    return jsonify(productos)
-
-# =========================================
-# VENTAS
-# =========================================
-
-@app.route("/ventas", methods=["GET"])
-
-def obtener_ventas():
-
-    cursor.execute("SELECT * FROM ventas")
-
-    ventas = cursor.fetchall()
-
-    return jsonify(ventas)
-
-# =========================================
-# EJECUTAR
-# =========================================
-
-if __name__ == "__main__":
-
-    app.run(
-        host="0.0.0.0",
-        port=5000
-    )
-        
+}
+    

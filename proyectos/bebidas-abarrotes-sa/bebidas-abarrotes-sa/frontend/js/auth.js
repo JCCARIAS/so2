@@ -1,127 +1,145 @@
+
+
+// =====================================
+// AUTH JWT
+// =====================================
+
 window.onload = function () {
 
-const loginForm = document.getElementById("loginForm");
+    const loginForm =
+        document.getElementById(
+            "loginForm"
+        );
 
-if (!loginForm) {
-    console.log("Formulario login no encontrado");
-    return;
-}
+    if (!loginForm) return;
 
-loginForm.addEventListener("submit", function (e) {
+    loginForm.addEventListener(
+        "submit",
+        async function (e) {
 
-    e.preventDefault();
+            e.preventDefault();
 
-    const usuario = document.getElementById("usuario").value.trim();
-    const password = document.getElementById("password").value.trim();
+            const usuario =
+                document.getElementById(
+                    "usuario"
+                ).value;
 
-    // =========================
-    // LOGIN ADMIN
-    // =========================
+            const password =
+                document.getElementById(
+                    "password"
+                ).value;
 
-    if (usuario === "admin" && password === "1234") {
+            try {
 
-        localStorage.setItem("usuario", usuario);
-        localStorage.setItem("rol", "admin");
+                const response =
+                    await fetch(
+                        "/api/login",
+                        {
 
-        window.location.href = "pages/dashboard.html";
+                            method: "POST",
 
-        return;
-    }
+                            headers: {
 
-    // =========================
-    // LOGIN VENTAS
-    // =========================
+                                "Content-Type":
+                                    "application/json"
 
-    if (usuario === "ventas1" && password === "1234") {
+                            },
 
-        localStorage.setItem("usuario", usuario);
-        localStorage.setItem("rol", "ventas");
+                            body: JSON.stringify({
 
-        window.location.href = "pages/ventas.html";
+                                usuario,
+                                password
 
-        return;
-    }
+                            })
 
-    // =========================
-    // LOGIN INVENTARIO
-    // =========================
+                        }
+                    );
 
-    if (usuario === "inventario1" && password === "1234") {
+                const data =
+                    await response.json();
 
-        localStorage.setItem("usuario", usuario);
-        localStorage.setItem("rol", "inventario");
+                if (data.success) {
 
-        window.location.href = "pages/inventario.html";
+                    localStorage.setItem(
+                        "token",
+                        data.token
+                    );
 
-        return;
-    }
+                    localStorage.setItem(
+                        "usuario",
+                        data.usuario
+                    );
 
-    // =========================
-    // LOGIN FINANZAS
-    // =========================
+                    localStorage.setItem(
+                        "rol",
+                        data.rol
+                    );
 
-    if (usuario === "finanzas1" && password === "1234") {
+                    if (
+                        data.rol === "admin"
+                    ) {
 
-        localStorage.setItem("usuario", usuario);
-        localStorage.setItem("rol", "finanzas");
+                        window.location.href =
+                            "pages/dashboard.html";
 
-        window.location.href = "pages/finanzas.html";
+                    }
 
-        return;
-    }
+                    if (
+                        data.rol === "ventas"
+                    ) {
 
-    // =========================
-    // LOGIN USUARIOS
-    // =========================
+                        window.location.href =
+                            "pages/ventas.html";
 
-    if (usuario === "usuario1" && password === "1234") {
+                    }
 
-        localStorage.setItem("usuario", usuario);
-        localStorage.setItem("rol", "usuarios");
+                    if (
+                        data.rol === "inventario"
+                    ) {
 
-        window.location.href = "pages/usuarios.html";
+                        window.location.href =
+                            "pages/inventario.html";
 
-        return;
-    }
+                    }
 
-    // =========================
-    // LOGIN REPORTES
-    // =========================
+                    if (
+                        data.rol === "finanzas"
+                    ) {
 
-    if (usuario === "reportes1" && password === "1234") {
+                        window.location.href =
+                            "pages/finanzas.html";
 
-        localStorage.setItem("usuario", usuario);
-        localStorage.setItem("rol", "reportes");
+                    }
 
-        window.location.href = "pages/reportes.html";
+                } else {
 
-        return;
-    }
+                    alert(
+                        "Credenciales incorrectas"
+                    );
 
-    alert("Usuario o contraseña incorrectos");
+                }
 
-});
+            } catch (error) {
+
+                console.error(error);
+
+            }
+
+        }
+    );
 
 };
 
-// ======================================
-// MOSTRAR / OCULTAR PASSWORD
-// ======================================
+// =====================================
+// LOGOUT
+// =====================================
 
-function togglePassword() {
+function logout() {
 
-const passwordInput = document.getElementById("password");
+    localStorage.clear();
 
-if (!passwordInput) return;
-
-if (passwordInput.type === "password") {
-
-    passwordInput.type = "text";
-
-} else {
-
-    passwordInput.type = "password";
+    window.location.href =
+        "/login.html";
 
 }
-
-}
+        

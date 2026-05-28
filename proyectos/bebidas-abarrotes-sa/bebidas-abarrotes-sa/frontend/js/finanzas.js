@@ -1,79 +1,74 @@
 
 
+// =====================================
+// DASHBOARD DINÁMICO
+// =====================================
+
 document.addEventListener(
     "DOMContentLoaded",
     () => {
 
-        cargarFinanzas();
+        cargarDashboard();
+
     }
 );
 
-function cargarFinanzas() {
+// =====================================
+// CARGAR STATS
+// =====================================
 
-    const movimientos = [
+async function cargarDashboard() {
 
-        {
-            id: 1,
-            tipo: "Ingreso",
-            descripcion: "Venta Coca Cola",
-            monto: "Q 1,200",
-            fecha: "27/05/2026"
-        },
+    try {
 
-        {
-            id: 2,
-            tipo: "Gasto",
-            descripcion: "Compra Inventario",
-            monto: "Q 800",
-            fecha: "27/05/2026"
-        },
+        const token =
+            localStorage.getItem(
+                "token"
+            );
 
-        {
-            id: 3,
-            tipo: "Ingreso",
-            descripcion: "Venta Pepsi",
-            monto: "Q 450",
-            fecha: "27/05/2026"
-        }
-    ];
+        const response =
+            await fetch(
+                "/api/dashboard/stats",
+                {
 
-    const tabla =
+                    headers: {
+
+                        Authorization:
+                            token
+
+                    }
+
+                }
+            );
+
+        const data =
+            await response.json();
+
         document.getElementById(
-            "tablaFinanzas"
-        );
+            "totalVentas"
+        ).innerText =
+            "Q " + data.ventas;
 
-    tabla.innerHTML = "";
+        document.getElementById(
+            "totalProductos"
+        ).innerText =
+            data.productos;
 
-    movimientos.forEach(item => {
+        document.getElementById(
+            "totalClientes"
+        ).innerText =
+            data.clientes;
 
-        tabla.innerHTML += `
+        document.getElementById(
+            "totalUsuarios"
+        ).innerText =
+            data.usuarios;
 
-            <tr>
+    } catch (error) {
 
-                <td>${item.id}</td>
+        console.error(error);
 
-                <td>
+    }
 
-                    <span class="badge ${
-                        item.tipo === "Ingreso"
-                        ? "bg-success"
-                        : "bg-danger"
-                    }">
-
-                        ${item.tipo}
-
-                    </span>
-
-                </td>
-
-                <td>${item.descripcion}</td>
-
-                <td>${item.monto}</td>
-
-                <td>${item.fecha}</td>
-
-            </tr>
-        `;
-    });
 }
-
+    

@@ -1,115 +1,91 @@
 
 
-CREATE DATABASE IF NOT EXISTS empresa;
+version: '3.9'
 
-USE empresa;
+services:
 
--- =========================================
--- TABLA USUARIOS
--- =========================================
+  mysql:
+    image: mysql:8.0
+    container_name: mysql_empresa
+    restart: always
 
-CREATE TABLE usuarios (
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: empresa
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: admin123
 
-    id INT AUTO_INCREMENT PRIMARY KEY,
+    ports:
+      - "3307:3306"
 
-    usuario VARCHAR(100),
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
 
-    password VARCHAR(100),
+    networks:
+      - empresa_network
 
-    rol VARCHAR(50)
+  backend1:
+    build: ./backend-api-1
+    container_name: backend_api_1
+    restart: always
 
-);
+    depends_on:
+      - mysql
 
-INSERT INTO usuarios (
-    usuario,
-    password,
-    rol
-)
+    environment:
+      DB_HOST: mysql
+      DB_USER: admin
+      DB_PASSWORD: admin123
+      DB_NAME: empresa
 
-VALUES
+    ports:
+      - "5001:5000"
 
-('admin', '1234', 'admin'),
-('ventas1', '1234', 'ventas'),
-('inventario1', '1234', 'inventario'),
-('finanzas1', '1234', 'finanzas');
+    networks:
+      - empresa_network
 
--- =========================================
--- CLIENTES
--- =========================================
+  backend2:
+    build: ./backend-api-2
+    container_name: backend_api_2
+    restart: always
 
-CREATE TABLE clientes (
+    depends_on:
+      - mysql
 
-    id INT AUTO_INCREMENT PRIMARY KEY,
+    environment:
+      DB_HOST: mysql
+      DB_USER: admin
+      DB_PASSWORD: admin123
+      DB_NAME: empresa
 
-    nombre VARCHAR(100),
+    ports:
+      - "5002:5000"
 
-    telefono VARCHAR(20),
+    networks:
+      - empresa_network
 
-    direccion VARCHAR(200)
+  frontend:
+    build:
+      context: .
+      dockerfile: nginx/Dockerfile
 
-);
+    container_name: frontend_empresa
+    restart: always
 
-INSERT INTO clientes (
-    nombre,
-    telefono,
-    direccion
-)
+    depends_on:
+      - backend1
+      - backend2
 
-VALUES
+    ports:
+      - "80:80"
 
-('Juan Perez', '5555-1111', 'Guatemala'),
-('Maria Lopez', '5555-2222', 'Mixco');
+    networks:
+      - empresa_network
 
--- =========================================
--- PRODUCTOS
--- =========================================
+volumes:
+  mysql_data:
 
-CREATE TABLE productos (
+networks:
+  empresa_network:
 
-    id INT AUTO_INCREMENT PRIMARY KEY,
-
-    nombre VARCHAR(100),
-
-    precio DECIMAL(10,2),
-
-    stock INT
-
-);
-
-INSERT INTO productos (
-    nombre,
-    precio,
-    stock
-)
-
-VALUES
-
-('Coca Cola', 10.50, 100),
-('Pepsi', 9.50, 150);
-
--- =========================================
--- VENTAS
--- =========================================
-
-CREATE TABLE ventas (
-
-    id INT AUTO_INCREMENT PRIMARY KEY,
-
-    producto VARCHAR(100),
-
-    cantidad INT,
-
-    total DECIMAL(10,2)
-
-);
-
-INSERT INTO ventas (
-    producto,
-    cantidad,
-    total
-)
-
-VALUES
-
-('Coca Cola', 5, 52.50),
-('Pepsi', 3, 28.50);

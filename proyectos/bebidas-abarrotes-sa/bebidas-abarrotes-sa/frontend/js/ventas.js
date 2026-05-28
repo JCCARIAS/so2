@@ -1,85 +1,104 @@
 
 
+// =====================================
+// VENTAS MYSQL REAL
+// =====================================
+
 document.addEventListener(
     "DOMContentLoaded",
     () => {
 
         cargarVentas();
 
-        document
-            .getElementById("formVenta")
-            .addEventListener(
-                "submit",
-                guardarVenta
-            );
     }
 );
 
+// =====================================
+// CARGAR VENTAS
+// =====================================
+
 async function cargarVentas() {
 
-    const ventas =
-        await obtenerVentas();
+    try {
 
-    const tabla =
-        document.getElementById(
-            "tablaVentas"
-        );
+        const response =
+            await fetch("/api/ventas");
 
-    tabla.innerHTML = "";
+        const ventas =
+            await response.json();
 
-    ventas.forEach(venta => {
+        const tbody =
+            document.querySelector(
+                "tbody"
+            );
 
-        tabla.innerHTML += `
+        if (!tbody) return;
 
-            <tr>
+        tbody.innerHTML = "";
 
-                <td>${venta.id}</td>
+        ventas.forEach(venta => {
 
-                <td>${venta.cliente}</td>
+            tbody.innerHTML += `
 
-                <td>${venta.producto}</td>
+                <tr>
 
-                <td>Q ${venta.total}</td>
+                    <td>${venta.id}</td>
 
-                <td>
+                    <td>${venta.producto}</td>
 
-                    <span class="badge bg-success">
+                    <td>${venta.cantidad}</td>
 
-                        Completada
+                    <td>Q ${venta.total}</td>
 
-                    </span>
+                </tr>
 
-                </td>
+            `;
 
-            </tr>
-        `;
-    });
+        });
+
+    } catch (error) {
+
+        console.error(error);
+
+    }
+
 }
 
-async function guardarVenta(e) {
+// =====================================
+// AGREGAR VENTA
+// =====================================
 
-    e.preventDefault();
+async function agregarVenta() {
 
-    const venta = {
+    const producto =
+        prompt("Producto:");
 
-        cliente:
-            document.getElementById(
-                "cliente"
-            ).value,
+    const cantidad =
+        prompt("Cantidad:");
 
-        producto:
-            document.getElementById(
-                "producto"
-            ).value,
+    const total =
+        prompt("Total:");
 
-        total:
-            document.getElementById(
-                "total"
-            ).value
-    };
+    await fetch("/api/ventas", {
 
-    await crearVenta(venta);
+        method: "POST",
 
-    location.reload();
+        headers: {
+            "Content-Type":
+                "application/json"
+        },
+
+        body: JSON.stringify({
+
+            producto,
+            cantidad,
+            total
+
+        })
+
+    });
+
+    cargarVentas();
+
 }
     

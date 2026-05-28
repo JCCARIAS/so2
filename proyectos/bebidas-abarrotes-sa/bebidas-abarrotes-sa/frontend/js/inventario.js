@@ -1,101 +1,184 @@
 
 
+// =====================================
+// INVENTARIO CRUD COMPLETO
+// =====================================
+
 document.addEventListener(
     "DOMContentLoaded",
     () => {
 
         cargarProductos();
 
-        document
-            .getElementById("formProducto")
-            .addEventListener(
-                "submit",
-                guardarProducto
-            );
     }
 );
 
+// =====================================
+// CARGAR PRODUCTOS
+// =====================================
+
 async function cargarProductos() {
 
-    const productos =
-        await obtenerProductos();
+    try {
 
-    const tabla =
-        document.getElementById(
-            "tablaProductos"
-        );
+        const response =
+            await fetch("/api/productos");
 
-    tabla.innerHTML = "";
+        const productos =
+            await response.json();
 
-    productos.forEach(producto => {
+        const tabla =
+            document.getElementById(
+                "tablaProductos"
+            );
 
-        tabla.innerHTML += `
+        tabla.innerHTML = "";
 
-            <tr>
+        productos.forEach(producto => {
 
-                <td>${producto.id}</td>
+            tabla.innerHTML += `
 
-                <td>${producto.nombre}</td>
+                <tr>
 
-                <td>Q ${producto.precio}</td>
+                    <td>${producto.id}</td>
 
-                <td>${producto.stock}</td>
+                    <td>${producto.nombre}</td>
 
-                <td>
+                    <td>Q ${producto.precio}</td>
 
-                    <span class="badge bg-success">
+                    <td>${producto.stock}</td>
 
-                        Disponible
+                    <td>
 
-                    </span>
+                        <button
+                            class="btn btn-primary"
+                            onclick="editarProducto(${producto.id})"
+                        >
+                            Editar
+                        </button>
 
-                </td>
+                        <button
+                            class="btn btn-danger"
+                            onclick="eliminarProducto(${producto.id})"
+                        >
+                            Eliminar
+                        </button>
 
-                <td>
+                    </td>
 
-                    <button class="btn btn-warning btn-sm">
+                </tr>
 
-                        Editar
+            `;
 
-                    </button>
+        });
 
-                    <button class="btn btn-danger btn-sm">
+    } catch (error) {
 
-                        Eliminar
+        console.error(error);
 
-                    </button>
+    }
 
-                </td>
-
-            </tr>
-        `;
-    });
 }
 
-async function guardarProducto(e) {
+// =====================================
+// AGREGAR PRODUCTO
+// =====================================
 
-    e.preventDefault();
+async function agregarProducto() {
 
-    const producto = {
+    const nombre =
+        document.getElementById(
+            "nombre"
+        ).value;
 
-        nombre:
-            document.getElementById(
-                "nombre"
-            ).value,
+    const precio =
+        document.getElementById(
+            "precio"
+        ).value;
 
-        precio:
-            document.getElementById(
-                "precio"
-            ).value,
+    const stock =
+        document.getElementById(
+            "stock"
+        ).value;
 
-        stock:
-            document.getElementById(
-                "stock"
-            ).value
-    };
+    await fetch("/api/productos", {
 
-    await crearProducto(producto);
+        method: "POST",
 
-    location.reload();
+        headers: {
+
+            "Content-Type":
+                "application/json"
+
+        },
+
+        body: JSON.stringify({
+
+            nombre,
+            precio,
+            stock
+
+        })
+
+    });
+
+    cargarProductos();
+
+}
+
+// =====================================
+// ELIMINAR PRODUCTO
+// =====================================
+
+async function eliminarProducto(id) {
+
+    await fetch(`/api/productos/${id}`, {
+
+        method: "DELETE"
+
+    });
+
+    cargarProductos();
+
+}
+
+// =====================================
+// EDITAR PRODUCTO
+// =====================================
+
+async function editarProducto(id) {
+
+    const nombre =
+        prompt("Nuevo nombre:");
+
+    const precio =
+        prompt("Nuevo precio:");
+
+    const stock =
+        prompt("Nuevo stock:");
+
+    await fetch(`/api/productos/${id}`, {
+
+        method: "PUT",
+
+        headers: {
+
+            "Content-Type":
+                "application/json"
+
+        },
+
+        body: JSON.stringify({
+
+            nombre,
+            precio,
+            stock
+
+        })
+
+    });
+
+    cargarProductos();
+
 }
     

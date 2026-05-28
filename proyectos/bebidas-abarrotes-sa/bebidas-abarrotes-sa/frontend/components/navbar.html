@@ -1,44 +1,45 @@
-# frontend/components/navbar.html
 
-```html id="6t1xdu"
-<header class="topbar">
 
-    <div class="topbar-left">
+<nav class="navbar">
 
-        <h2 id="page-title">
+    <div class="navbar-left">
 
-            Sistema Empresarial
+        <button
+            class="menu-btn"
+            onclick="toggleSidebar()"
+        >
+            ☰
+        </button>
 
-        </h2>
+        <h1 class="logo">
+
+            Bebidas & Abarrotes S.A
+
+        </h1>
 
     </div>
 
-    <div class="topbar-right">
+    <div class="navbar-right">
 
-        <div class="user-info">
+        <span
+            id="usuarioLogueado"
+            class="usuario-texto"
+        >
 
-            <span>
+            Usuario
 
-                Bienvenido,
+        </span>
 
-            </span>
+        <button
+            class="logout-btn"
+            onclick="logout()"
+        >
 
-            <strong id="usuarioActual">
-
-                Admin
-
-            </strong>
-
-        </div>
-
-        <button class="logout-btn"
-                onclick="logout()">
-
-            Logout
+            Salir
 
         </button>
 
     </div>
 
-</header>
-```
+</nav>
+
