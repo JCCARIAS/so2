@@ -1,0 +1,201 @@
+# frontend/reportes.html
+
+```html id="x8v4pd"
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Reportes</title>
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+
+    <!-- CSS -->
+    <link rel="stylesheet"
+          href="css/styles.css">
+
+    <link rel="stylesheet"
+          href="css/sidebar.css">
+
+    <link rel="stylesheet"
+          href="css/navbar.css">
+
+</head>
+
+<body>
+
+    <!-- SIDEBAR -->
+    <div id="sidebar-container"></div>
+
+    <!-- NAVBAR -->
+    <div id="navbar-container"></div>
+
+    <!-- MAIN -->
+    <main class="main-content">
+
+        <div class="container-fluid">
+
+            <div class="d-flex justify-content-between align-items-center mb-4">
+
+                <div>
+
+                    <h1 class="page-title">
+
+                        Reportes
+
+                    </h1>
+
+                    <p class="page-subtitle">
+
+                        Reportes empresariales y estadísticas
+
+                    </p>
+
+                </div>
+
+            </div>
+
+            <!-- CARDS -->
+            <div class="row g-4 mb-4">
+
+                <div class="col-md-3">
+
+                    <div class="dashboard-card bg-primary">
+
+                        <h3>
+
+                            Ventas Totales
+
+                        </h3>
+
+                        <p>
+
+                            Q 125,000
+
+                        </p>
+
+                    </div>
+
+                </div>
+
+                <div class="col-md-3">
+
+                    <div class="dashboard-card bg-success">
+
+                        <h3>
+
+                            Productos
+
+                        </h3>
+
+                        <p>
+
+                            1,250
+
+                        </p>
+
+                    </div>
+
+                </div>
+
+                <div class="col-md-3">
+
+                    <div class="dashboard-card bg-warning">
+
+                        <h3>
+
+                            Clientes
+
+                        </h3>
+
+                        <p>
+
+                            325
+
+                        </p>
+
+                    </div>
+
+                </div>
+
+                <div class="col-md-3">
+
+                    <div class="dashboard-card bg-danger">
+
+                        <h3>
+
+                            Usuarios
+
+                        </h3>
+
+                        <p>
+
+                            8
+
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- TABLA -->
+            <div class="table-container">
+
+                <div class="table-header">
+
+                    Reportes Generados
+
+                </div>
+
+                <table class="table table-hover align-middle">
+
+                    <thead>
+
+                        <tr>
+
+                            <th>ID</th>
+                            <th>Reporte</th>
+                            <th>Fecha</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody id="tablaReportes">
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </main>
+
+    <!-- SCRIPTS -->
+    <script src="js/layout.js"></script>
+
+    <script src="js/sidebar.js"></script>
+
+    <script src="js/navbar.js"></script>
+
+    <script src="js/reportes.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+
+</html>
+```

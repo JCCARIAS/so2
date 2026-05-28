@@ -1,0 +1,88 @@
+version: '3.9'
+
+services:
+
+mysql:
+image: mysql:8.0
+container_name: mysql_empresa
+restart: always
+
+environment:
+  MYSQL_ROOT_PASSWORD: root
+  MYSQL_DATABASE: empresa
+  MYSQL_USER: admin
+  MYSQL_PASSWORD: admin123
+
+ports:
+  - "3306:3306"
+
+volumes:
+  - mysql_data:/var/lib/mysql
+  - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+
+networks:
+  - empresa_network
+
+backend1:
+build: ./backend-api-1
+container_name: backend_api_1
+restart: always
+
+depends_on:
+  - mysql
+
+environment:
+  DB_HOST: mysql
+  DB_USER: admin
+  DB_PASSWORD: admin123
+  DB_NAME: empresa
+
+ports:
+  - "5001:5000"
+
+networks:
+  - empresa_network
+
+backend2:
+build: ./backend-api-2
+container_name: backend_api_2
+restart: always
+
+depends_on:
+  - mysql
+
+environment:
+  DB_HOST: mysql
+  DB_USER: admin
+  DB_PASSWORD: admin123
+  DB_NAME: empresa
+
+ports:
+  - "5002:5000"
+
+networks:
+  - empresa_network
+
+frontend:
+build:
+context: .
+dockerfile: nginx/Dockerfile
+
+container_name: frontend_empresa
+restart: always
+
+depends_on:
+  - backend1
+  - backend2
+
+ports:
+  - "80:80"
+
+networks:
+  - empresa_network
+
+volumes:
+mysql_data:
+
+networks:
+empresa_network:
