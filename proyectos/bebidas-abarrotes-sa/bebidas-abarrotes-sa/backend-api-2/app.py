@@ -111,6 +111,91 @@ def token_required(f):
     return decorated
 
 # =========================================
+# LOGIN
+# =========================================
+
+@app.route(
+    "/api/login",
+    methods=["POST"]
+)
+
+def login():
+
+    data = request.json
+
+    usuario = data.get("usuario")
+
+    password = data.get("password")
+
+    sql = """
+
+        SELECT *
+
+        FROM usuarios
+
+        WHERE usuario = %s
+
+    """
+
+    cursor.execute(sql, (usuario,))
+
+    user = cursor.fetchone()
+
+    if not user:
+
+        return jsonify({
+
+            "success": False,
+
+            "error":
+                "Usuario no encontrado"
+
+        }), 401
+
+    if password != user["password"]:
+
+        return jsonify({
+
+            "success": False,
+
+            "error":
+                "Contraseña incorrecta"
+
+        }), 401
+
+    token = jwt.encode({
+
+        "usuario":
+            user["usuario"],
+
+        "rol":
+            user["rol"],
+
+        "exp":
+            datetime.datetime.utcnow()
+            + datetime.timedelta(hours=8)
+
+    },
+
+    app.config["SECRET_KEY"],
+
+    algorithm="HS256")
+
+    return jsonify({
+
+        "success": True,
+
+        "token": token,
+
+        "usuario":
+            user["usuario"],
+
+        "rol":
+            user["rol"]
+
+    })
+
+# =========================================
 # DASHBOARD STATS
 # =========================================
 
