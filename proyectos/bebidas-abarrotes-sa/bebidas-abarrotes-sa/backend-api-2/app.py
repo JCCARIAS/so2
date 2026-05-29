@@ -1,5 +1,6 @@
 
 
+
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 
@@ -7,14 +8,9 @@ import mysql.connector
 import os
 import time
 import jwt
-import bcrypt
 import datetime
 
 from functools import wraps
-
-# =========================================
-# APP
-# =========================================
 
 app = Flask(__name__)
 
@@ -22,43 +18,20 @@ CORS(app)
 
 app.config["SECRET_KEY"] = "SUPER_SECRET_KEY"
 
-# =========================================
-# MYSQL
-# =========================================
-
 time.sleep(5)
 
 db = mysql.connector.connect(
 
-    host=os.getenv(
-        "DB_HOST",
-        "mysql"
-    ),
-
-    user=os.getenv(
-        "DB_USER",
-        "admin"
-    ),
-
-    password=os.getenv(
-        "DB_PASSWORD",
-        "admin123"
-    ),
-
-    database=os.getenv(
-        "DB_NAME",
-        "empresa"
-    )
+    host=os.getenv("DB_HOST", "mysql"),
+    user=os.getenv("DB_USER", "admin"),
+    password=os.getenv("DB_PASSWORD", "admin123"),
+    database=os.getenv("DB_NAME", "empresa")
 
 )
 
 cursor = db.cursor(dictionary=True)
 
 print("MYSQL CONECTADO BACKEND 2")
-
-# =========================================
-# TOKEN REQUIRED
-# =========================================
 
 def token_required(f):
 
@@ -70,9 +43,7 @@ def token_required(f):
 
         if "Authorization" in request.headers:
 
-            token = request.headers[
-                "Authorization"
-            ]
+            token = request.headers["Authorization"]
 
         if not token:
 
@@ -110,10 +81,6 @@ def token_required(f):
 
     return decorated
 
-# =========================================
-# LOGIN
-# =========================================
-
 @app.route(
     "/api/login",
     methods=["POST"]
@@ -145,10 +112,7 @@ def login():
 
         return jsonify({
 
-            "success": False,
-
-            "error":
-                "Usuario no encontrado"
+            "success": False
 
         }), 401
 
@@ -156,10 +120,7 @@ def login():
 
         return jsonify({
 
-            "success": False,
-
-            "error":
-                "Contraseña incorrecta"
+            "success": False
 
         }), 401
 
@@ -195,114 +156,136 @@ def login():
 
     })
 
-# =========================================
-# DASHBOARD STATS
-# =========================================
-
 @app.route(
-    "/api/dashboard/stats",
+    "/api/productos",
     methods=["GET"]
 )
 
 @token_required
 
-def dashboard_stats():
+def obtener_productos():
 
     cursor.execute(
-        "SELECT COUNT(*) AS total FROM usuarios"
+        "SELECT * FROM productos"
     )
 
-    usuarios = cursor.fetchone()["total"]
+    productos = cursor.fetchall()
 
-    cursor.execute(
-        "SELECT COUNT(*) AS total FROM productos"
+    return jsonify(productos)
+
+@app.route(
+    "/api/productos",
+    methods=["POST"]
+)
+
+@token_required
+
+def agregar_producto():
+
+    data = request.json
+
+    sql = """
+
+        INSERT INTO productos (
+            nombre,
+            precio,
+            stock
+        )
+
+        VALUES (%s, %s, %s)
+
+    """
+
+    values = (
+
+        data["nombre"],
+        data["precio"],
+        data["stock"]
+
     )
 
-    productos = cursor.fetchone()["total"]
+    cursor.execute(sql, values)
 
-    cursor.execute(
-        "SELECT COUNT(*) AS total FROM clientes"
-    )
-
-    clientes = cursor.fetchone()["total"]
-
-    cursor.execute(
-        "SELECT SUM(total) AS total FROM ventas"
-    )
-
-    ventas = cursor.fetchone()["total"]
+    db.commit()
 
     return jsonify({
 
-        "usuarios": usuarios,
-
-        "productos": productos,
-
-        "clientes": clientes,
-
-        "ventas": ventas or 0
+        "mensaje":
+            "Producto agregado"
 
     })
 
-# =========================================
-# STATUS
-# =========================================
+@app.route(
+    "/api/productos/<int:id>",
+    methods=["PUT"]
+)
 
-@app.route("/status")
+@token_required
 
-def status():
+def editar_producto(id):
+
+    data = request.json
+
+    sql = """
+
+        UPDATE productos
+
+        SET
+            nombre = %s,
+            precio = %s,
+            stock = %s
+
+        WHERE id = %s
+
+    """
+
+    values = (
+
+        data["nombre"],
+        data["precio"],
+        data["stock"],
+        id
+
+    )
+
+    cursor.execute(sql, values)
+
+    db.commit()
 
     return jsonify({
 
-        "backend":
-            "API 2",
-
-        "status":
-            "online",
-
-        "secure":
-            True
+        "mensaje":
+            "Producto actualizado"
 
     })
 
-# =========================================
-# HEALTH
-# =========================================
+@app.route(
+    "/api/productos/<int:id>",
+    methods=["DELETE"]
+)
 
-@app.route("/health")
+@token_required
 
-def health():
+def eliminar_producto(id):
+
+    sql = """
+
+        DELETE FROM productos
+
+        WHERE id = %s
+
+    """
+
+    cursor.execute(sql, (id,))
+
+    db.commit()
 
     return jsonify({
 
-        "status":
-            "healthy"
+        "mensaje":
+            "Producto eliminado"
 
     })
-
-# =========================================
-# MONITOR
-# =========================================
-
-@app.route("/monitor")
-
-def monitor():
-
-    return jsonify({
-
-        "cpu": "OK",
-
-        "memory": "OK",
-
-        "mysql": "CONNECTED",
-
-        "backend": "API 2"
-
-    })
-
-# =========================================
-# HOME
-# =========================================
 
 @app.route("/")
 
@@ -311,13 +294,9 @@ def home():
     return jsonify({
 
         "message":
-            "Backend API 2 seguro funcionando"
+            "Backend API 2 funcionando"
 
     })
-
-# =========================================
-# START
-# =========================================
 
 if __name__ == "__main__":
 

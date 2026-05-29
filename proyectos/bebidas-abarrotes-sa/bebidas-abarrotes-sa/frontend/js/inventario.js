@@ -1,5 +1,7 @@
 
 
+
+
 // =====================================
 // INVENTARIO CRUD COMPLETO
 // =====================================
@@ -21,11 +23,56 @@ async function cargarProductos() {
 
     try {
 
+        const token =
+            localStorage.getItem(
+                "token"
+            );
+
         const response =
-            await fetch("/api/productos");
+            await fetch(
+
+                "/api/productos",
+
+                {
+
+                    headers: {
+
+                        Authorization:
+                            token
+
+                    }
+
+                }
+
+            );
 
         const productos =
             await response.json();
+
+        console.log(
+            "RESPUESTA API:",
+            productos
+        );
+
+        if (
+
+            !Array.isArray(
+                productos
+            )
+
+        ) {
+
+            alert(
+
+                JSON.stringify(
+                    productos
+                )
+
+            );
+
+            return;
+
+        }
 
         const tabla =
             document.getElementById(
@@ -76,6 +123,10 @@ async function cargarProductos() {
 
         console.error(error);
 
+        alert(
+            "Error cargando productos"
+        );
+
     }
 
 }
@@ -101,26 +152,40 @@ async function agregarProducto() {
             "stock"
         ).value;
 
-    await fetch("/api/productos", {
+    const token =
+        localStorage.getItem(
+            "token"
+        );
 
-        method: "POST",
+    await fetch(
 
-        headers: {
+        "/api/productos",
 
-            "Content-Type":
-                "application/json"
+        {
 
-        },
+            method: "POST",
 
-        body: JSON.stringify({
+            headers: {
 
-            nombre,
-            precio,
-            stock
+                "Content-Type":
+                    "application/json",
 
-        })
+                Authorization:
+                    token
 
-    });
+            },
+
+            body: JSON.stringify({
+
+                nombre,
+                precio,
+                stock
+
+            })
+
+        }
+
+    );
 
     cargarProductos();
 
@@ -132,11 +197,39 @@ async function agregarProducto() {
 
 async function eliminarProducto(id) {
 
-    await fetch(`/api/productos/${id}`, {
+    if (
+        !confirm(
+            "¿Eliminar producto?"
+        )
+    ) {
 
-        method: "DELETE"
+        return;
 
-    });
+    }
+
+    const token =
+        localStorage.getItem(
+            "token"
+        );
+
+    await fetch(
+
+        `/api/productos/${id}`,
+
+        {
+
+            method: "DELETE",
+
+            headers: {
+
+                Authorization:
+                    token
+
+            }
+
+        }
+
+    );
 
     cargarProductos();
 
@@ -149,34 +242,64 @@ async function eliminarProducto(id) {
 async function editarProducto(id) {
 
     const nombre =
-        prompt("Nuevo nombre:");
+        prompt(
+            "Nuevo nombre:"
+        );
 
     const precio =
-        prompt("Nuevo precio:");
+        prompt(
+            "Nuevo precio:"
+        );
 
     const stock =
-        prompt("Nuevo stock:");
+        prompt(
+            "Nuevo stock:"
+        );
 
-    await fetch(`/api/productos/${id}`, {
+    if (
+        !nombre ||
+        !precio ||
+        !stock
+    ) {
 
-        method: "PUT",
+        return;
 
-        headers: {
+    }
 
-            "Content-Type":
-                "application/json"
+    const token =
+        localStorage.getItem(
+            "token"
+        );
 
-        },
+    await fetch(
 
-        body: JSON.stringify({
+        `/api/productos/${id}`,
 
-            nombre,
-            precio,
-            stock
+        {
 
-        })
+            method: "PUT",
 
-    });
+            headers: {
+
+                "Content-Type":
+                    "application/json",
+
+                Authorization:
+                    token
+
+            },
+
+            body: JSON.stringify({
+
+                nombre,
+                precio,
+                stock
+
+            })
+
+        }
+
+    );
 
     cargarProductos();
 

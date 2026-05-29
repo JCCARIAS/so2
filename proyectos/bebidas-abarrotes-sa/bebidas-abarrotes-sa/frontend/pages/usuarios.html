@@ -1,5 +1,4 @@
 
-
 <!DOCTYPE html>
 <html lang="es">
 
@@ -7,10 +6,7 @@
 
 <meta charset="UTF-8">
 
-<meta
-name="viewport"
-content="width=device-width, initial-scale=1.0"
->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>Usuarios</title>
 
@@ -28,98 +24,109 @@ content="width=device-width, initial-scale=1.0"
 
 <div class="main-content">
 
-<h1 class="page-title">
+    <h1 class="page-title">
 
-Gestión de Usuarios
+        Gestión de Usuarios
 
-</h1>
+    </h1>
 
-<div class="form-container">
+    <div class="form-container">
 
-<div class="form-group">
+        <div class="form-group">
 
-<label>Usuario</label>
+            <label>Usuario</label>
 
-<input
-type="text"
-id="usuario"
-placeholder="Ingrese usuario"
->
+            <input
+                type="text"
+                id="usuario"
+                placeholder="Ingrese usuario"
+            >
 
-</div>
+        </div>
 
-<div class="form-group">
+        <div class="form-group">
 
-<label>Rol</label>
+            <label>Contraseña</label>
 
-<select id="rol">
+            <input
+                type="password"
+                id="password"
+                placeholder="Ingrese contraseña"
+            >
 
-<option value="">
-Seleccione rol
-</option>
+        </div>
 
-<option value="Administrador">
-Administrador
-</option>
+        <div class="form-group">
 
-<option value="Ventas">
-Ventas
-</option>
+            <label>Rol</label>
 
-<option value="Inventario">
-Inventario
-</option>
+            <select id="rol">
 
-<option value="Finanzas">
-Finanzas
-</option>
+                <option value="">
+                    Seleccione rol
+                </option>
 
-</select>
+                <option value="admin">
+                    Administrador
+                </option>
 
-</div>
+                <option value="ventas">
+                    Ventas
+                </option>
 
-<button
-class="btn btn-success"
-onclick="agregarUsuario()"
->
+                <option value="inventario">
+                    Inventario
+                </option>
 
-Agregar Usuario
+                <option value="finanzas">
+                    Finanzas
+                </option>
 
-</button>
+            </select>
 
-</div>
+        </div>
 
-<br>
+        <button
+            class="btn btn-success"
+            onclick="agregarUsuario()"
+        >
 
-<div class="table-container">
+            Agregar Usuario
 
-<table>
+        </button>
 
-<thead>
+    </div>
 
-<tr>
+    <br>
 
-<th>ID</th>
-<th>Usuario</th>
-<th>Rol</th>
-<th>Acciones</th>
+    <div class="table-container">
 
-</tr>
+        <table>
 
-</thead>
+            <thead>
 
-<tbody id="tablaUsuarios">
+                <tr>
 
-</tbody>
+                    <th>ID</th>
+                    <th>Usuario</th>
+                    <th>Rol</th>
+                    <th>Acciones</th>
 
-</table>
+                </tr>
 
-</div>
+            </thead>
+
+            <tbody id="tablaUsuarios">
+
+            </tbody>
+
+        </table>
+
+    </div>
 
 </div>
 
 <script src="../js/layout.js"></script>
-
 <script src="../js/usuarios.js"></script>
 
 </body>

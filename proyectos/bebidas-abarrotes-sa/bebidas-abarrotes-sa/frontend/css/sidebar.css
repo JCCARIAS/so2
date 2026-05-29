@@ -2,36 +2,61 @@
 
 .sidebar {
 
+    position: fixed;
+
+    left: 0;
+
+    top: 0;
+
     width: 260px;
 
     height: 100vh;
 
-    background: #0f172a;
+    background: linear-gradient(
+        180deg,
+        #111827,
+        #1f2937
+    );
 
-    position: fixed;
+    color: white;
 
-    top: 0;
+    display: flex;
 
-    left: 0;
+    flex-direction: column;
 
-    padding-top: 80px;
+    justify-content: space-between;
 
-    transition: 0.3s;
+    box-shadow: 4px 0 20px rgba(0,0,0,0.3);
 
-    z-index: 999;
+    z-index: 1000;
 
 }
 
 .sidebar-header {
 
-    padding: 20px;
+    padding: 30px 20px;
 
-    text-align: center;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
 
-    color: white;
+}
 
-    border-bottom:
-        1px solid rgba(255,255,255,0.1);
+.sidebar-header h1 {
+
+    margin: 0;
+
+    font-size: 28px;
+
+    color: #10b981;
+
+}
+
+.sidebar-header p {
+
+    margin-top: 8px;
+
+    font-size: 14px;
+
+    color: #9ca3af;
 
 }
 
@@ -39,13 +64,15 @@
 
     list-style: none;
 
-    margin-top: 20px;
+    padding: 20px 0;
+
+    margin: 0;
 
 }
 
 .sidebar-menu li {
 
-    margin: 10px 0;
+    margin-bottom: 10px;
 
 }
 
@@ -53,48 +80,62 @@
 
     display: block;
 
-    padding: 15px 25px;
+    padding: 14px 25px;
 
-    color: #cbd5e1;
+    color: white;
 
     text-decoration: none;
 
+    font-size: 16px;
+
     transition: 0.3s;
 
-    font-size: 16px;
+    border-left: 4px solid transparent;
 
 }
 
 .sidebar-menu a:hover {
 
-    background: #2563eb;
+    background: rgba(255,255,255,0.08);
+
+    border-left: 4px solid #10b981;
+
+    padding-left: 30px;
+
+}
+
+.sidebar-footer {
+
+    padding: 20px;
+
+    border-top: 1px solid rgba(255,255,255,0.1);
+
+}
+
+.logout-btn {
+
+    width: 100%;
+
+    padding: 14px;
+
+    border: none;
+
+    border-radius: 10px;
+
+    background: #ef4444;
 
     color: white;
 
-    border-left:
-        5px solid white;
+    font-size: 15px;
+
+    cursor: pointer;
+
+    transition: 0.3s;
 
 }
 
-.sidebar.active {
+.logout-btn:hover {
 
-    left: -260px;
-
-}
-
-@media (max-width: 768px) {
-
-    .sidebar {
-
-        left: -260px;
-
-    }
-
-    .sidebar.active {
-
-        left: 0;
-
-    }
+    background: #dc2626;
 
 }
-

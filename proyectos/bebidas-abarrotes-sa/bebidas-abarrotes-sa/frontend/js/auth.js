@@ -22,12 +22,14 @@ window.onload = function () {
             const usuario =
                 document.getElementById(
                     "usuario"
-                ).value;
+                ).value
+                .trim();
 
             const password =
                 document.getElementById(
                     "password"
-                ).value;
+                ).value
+                .trim();
 
             try {
 
@@ -58,7 +60,13 @@ window.onload = function () {
                 const data =
                     await response.json();
 
+                console.log(data);
+
                 if (data.success) {
+
+                    // =====================
+                    // GUARDAR TOKEN
+                    // =====================
 
                     localStorage.setItem(
                         "token",
@@ -75,12 +83,18 @@ window.onload = function () {
                         data.rol
                     );
 
+                    // =====================
+                    // REDIRECCIONES
+                    // =====================
+
                     if (
                         data.rol === "admin"
                     ) {
 
                         window.location.href =
                             "pages/dashboard.html";
+
+                        return;
 
                     }
 
@@ -91,6 +105,8 @@ window.onload = function () {
                         window.location.href =
                             "pages/ventas.html";
 
+                        return;
+
                     }
 
                     if (
@@ -99,6 +115,8 @@ window.onload = function () {
 
                         window.location.href =
                             "pages/inventario.html";
+
+                        return;
 
                     }
 
@@ -109,11 +127,21 @@ window.onload = function () {
                         window.location.href =
                             "pages/finanzas.html";
 
+                        return;
+
                     }
+
+                    // =====================
+                    // DEFAULT
+                    // =====================
+
+                    window.location.href =
+                        "pages/dashboard.html";
 
                 } else {
 
                     alert(
+                        data.error ||
                         "Credenciales incorrectas"
                     );
 
@@ -122,6 +150,10 @@ window.onload = function () {
             } catch (error) {
 
                 console.error(error);
+
+                alert(
+                    "Error conectando con servidor"
+                );
 
             }
 

@@ -1,267 +1,298 @@
-```html
+
+
 <!DOCTYPE html>
 <html lang="es">
 
 <head>
 
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
 
-    <title>Bebidas & Abarrotes S.A</title>
+<meta
+name="viewport"
+content="width=device-width, initial-scale=1.0"
+>
 
-    <link rel="stylesheet" href="css/styles.css">
+<title>Login</title>
 
-    <style>
+<link rel="stylesheet" href="css/styles.css">
 
-        *{
-            margin:0;
-            padding:0;
-            box-sizing:border-box;
-            font-family:Arial, Helvetica, sans-serif;
-        }
+<style>
 
-        body{
+body {
 
-            height:100vh;
+    margin: 0;
 
-            display:flex;
-            justify-content:center;
-            align-items:center;
+    padding: 0;
 
-            background-image:
-            linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)),
-            url('https://images.unsplash.com/photo-1520607162513-77705c0f0d4a?q=80&w=1974&auto=format&fit=crop');
+    font-family: Arial, sans-serif;
 
-            background-size:cover;
-            background-position:center;
+    background-image: url('https://images.unsplash.com/photo-1556740749-887f6717d7e4');
 
-        }
+    background-size: cover;
 
-        .login-container{
+    background-position: center;
 
-            width:400px;
+    height: 100vh;
 
-            padding:40px;
+    display: flex;
 
-            border-radius:20px;
+    justify-content: center;
 
-            backdrop-filter:blur(12px);
+    align-items: center;
 
-            background:rgba(255,255,255,0.1);
+}
 
-            border:1px solid rgba(255,255,255,0.2);
+.overlay {
 
-            box-shadow:0 8px 32px rgba(0,0,0,0.4);
+    position: absolute;
 
-            color:white;
+    width: 100%;
 
-        }
+    height: 100%;
 
-        .logo{
+    background: rgba(0,0,0,0.6);
 
-            text-align:center;
-            margin-bottom:30px;
+}
 
-        }
+.login-container {
 
-        .logo h1{
+    position: relative;
 
-            font-size:30px;
-            margin-bottom:10px;
+    z-index: 2;
 
-        }
+    width: 380px;
 
-        .logo p{
+    padding: 40px;
 
-            color:#ddd;
+    border-radius: 20px;
 
-        }
+    background: rgba(255,255,255,0.1);
 
-        .input-group{
+    backdrop-filter: blur(12px);
 
-            margin-bottom:20px;
+    color: white;
 
-        }
+    box-shadow: 0 8px 30px rgba(0,0,0,0.5);
 
-        .input-group label{
+}
 
-            display:block;
-            margin-bottom:8px;
-            font-size:14px;
+.login-container h1 {
 
-        }
+    text-align: center;
 
-        .input-group input{
+    margin-bottom: 10px;
 
-            width:100%;
-            padding:14px;
+}
 
-            border:none;
-            outline:none;
+.login-container p {
 
-            border-radius:10px;
+    text-align: center;
 
-            background:rgba(255,255,255,0.15);
+    opacity: 0.8;
 
-            color:white;
+    margin-bottom: 30px;
 
-            font-size:16px;
+}
 
-        }
+.form-group {
 
-        .input-group input::placeholder{
+    margin-bottom: 20px;
 
-            color:#ddd;
+}
 
-        }
+.form-group label {
 
-        .password-container{
+    display: block;
 
-            position:relative;
+    margin-bottom: 8px;
 
-        }
+}
 
-        .toggle-password{
+.form-group input {
 
-            position:absolute;
+    width: 100%;
 
-            right:15px;
-            top:50%;
+    padding: 14px;
 
-            transform:translateY(-50%);
+    border: none;
 
-            cursor:pointer;
+    border-radius: 10px;
 
-            color:white;
+    font-size: 16px;
 
-            font-size:14px;
+}
 
-        }
+.password-container {
 
-        .login-btn{
+    position: relative;
 
-            width:100%;
+}
 
-            padding:14px;
+.password-container button {
 
-            border:none;
+    position: absolute;
 
-            border-radius:10px;
+    right: 10px;
 
-            background:#00b894;
+    top: 50%;
 
-            color:white;
+    transform: translateY(-50%);
 
-            font-size:16px;
+    background: none;
 
-            cursor:pointer;
+    border: none;
 
-            transition:0.3s;
+    cursor: pointer;
 
-            margin-top:10px;
+    font-size: 18px;
 
-        }
+}
 
-        .login-btn:hover{
+.login-btn {
 
-            background:#019875;
+    width: 100%;
 
-        }
+    padding: 14px;
 
-        .footer{
+    border: none;
 
-            text-align:center;
-            margin-top:20px;
-            font-size:13px;
-            color:#ccc;
+    border-radius: 10px;
 
-        }
+    background: #00b894;
 
-        @media(max-width:500px){
+    color: white;
 
-            .login-container{
+    font-size: 16px;
 
-                width:90%;
-                padding:30px;
+    cursor: pointer;
 
-            }
+    transition: 0.3s;
 
-        }
+}
 
-    </style>
+.login-btn:hover {
+
+    background: #019875;
+
+}
+
+.footer {
+
+    text-align: center;
+
+    margin-top: 20px;
+
+    opacity: 0.7;
+
+}
+
+</style>
 
 </head>
 
 <body>
 
-    <div class="login-container">
+<div class="overlay"></div>
 
-        <div class="logo">
+<div class="login-container">
 
-            <h1>Bebidas & Abarrotes</h1>
+<h1>
 
-            <p>Sistema Empresarial</p>
+Bebidas & Abarrotes
 
-        </div>
+</h1>
 
-        <form id="loginForm">
+<p>
 
-            <div class="input-group">
+Sistema Empresarial
 
-                <label>Usuario</label>
+</p>
 
-                <input
-                    type="text"
-                    id="usuario"
-                    placeholder="Ingrese usuario"
-                    required
-                >
+<form id="loginForm">
 
-            </div>
+<div class="form-group">
 
-            <div class="input-group">
+<label>Usuario</label>
 
-                <label>Contraseña</label>
+<input
+type="text"
+id="usuario"
+required
+>
 
-                <div class="password-container">
+</div>
 
-                    <input
-                        type="password"
-                        id="password"
-                        placeholder="Ingrese contraseña"
-                        required
-                    >
+<div class="form-group">
 
-                    <span
-                        class="toggle-password"
-                        onclick="togglePassword()"
-                    >
-                        👁
-                    </span>
+<label>Contraseña</label>
 
-                </div>
+<div class="password-container">
 
-            </div>
+<input
+type="password"
+id="password"
+required
+>
 
-            <button type="submit" class="login-btn">
+<button
+type="button"
+onclick="togglePassword()"
+>
 
-                Iniciar Sesión
+👁️
 
-            </button>
+</button>
 
-        </form>
+</div>
 
-        <div class="footer">
+</div>
 
-            © 2026 Bebidas & Abarrotes S.A
+<button
+type="submit"
+class="login-btn"
+>
 
-        </div>
+Iniciar Sesión
 
-    </div>
+</button>
 
-    <script src="js/auth.js"></script>
+</form>
+
+<div class="footer">
+
+© 2026 Bebidas & Abarrotes S.A
+
+</div>
+
+</div>
+
+<script src="js/auth.js"></script>
+
+<script>
+
+function togglePassword() {
+
+    const passwordInput =
+        document.getElementById(
+            "password"
+        );
+
+    if (
+        passwordInput.type === "password"
+    ) {
+
+        passwordInput.type = "text";
+
+    } else {
+
+        passwordInput.type = "password";
+
+    }
+
+}
+
+</script>
 
 </body>
 
 </html>
-```

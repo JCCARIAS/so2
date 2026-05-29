@@ -1,9 +1,4 @@
 
-
-// =====================================
-// USUARIOS.JS MYSQL REAL
-// =====================================
-
 document.addEventListener(
     "DOMContentLoaded",
     () => {
@@ -13,16 +8,23 @@ document.addEventListener(
     }
 );
 
-// =====================================
-// CARGAR USUARIOS
-// =====================================
-
 async function cargarUsuarios() {
 
     try {
 
+        const token =
+            localStorage.getItem("token");
+
         const response =
-            await fetch("/api/usuarios");
+            await fetch("/api/usuarios", {
+
+                headers: {
+
+                    Authorization: token
+
+                }
+
+            });
 
         const usuarios =
             await response.json();
@@ -78,87 +80,48 @@ async function cargarUsuarios() {
 
 }
 
-// =====================================
-// AGREGAR USUARIO
-// =====================================
-
 async function agregarUsuario() {
 
     const usuario =
-        document.getElementById(
-            "usuario"
-        ).value;
+        document.getElementById("usuario").value;
+
+    const password =
+        document.getElementById("password").value;
 
     const rol =
-        document.getElementById(
-            "rol"
-        ).value;
+        document.getElementById("rol").value;
 
-    const nuevoUsuario = {
+    if (!usuario || !password || !rol) {
 
-        usuario,
-        password: "1234",
-        rol
+        alert(
+            "Complete todos los campos"
+        );
 
-    };
+        return;
+
+    }
+
+    const token =
+        localStorage.getItem("token");
 
     await fetch("/api/usuarios", {
 
         method: "POST",
 
         headers: {
-            "Content-Type": "application/json"
-        },
 
-        body: JSON.stringify(
-            nuevoUsuario
-        )
+            "Content-Type":
+                "application/json",
 
-    });
+            Authorization:
+                token
 
-    cargarUsuarios();
-
-}
-
-// =====================================
-// ELIMINAR
-// =====================================
-
-async function eliminarUsuario(id) {
-
-    await fetch(`/api/usuarios/${id}`, {
-
-        method: "DELETE"
-
-    });
-
-    cargarUsuarios();
-
-}
-
-// =====================================
-// EDITAR
-// =====================================
-
-async function editarUsuario(id) {
-
-    const usuario =
-        prompt("Nuevo usuario:");
-
-    const rol =
-        prompt("Nuevo rol:");
-
-    await fetch(`/api/usuarios/${id}`, {
-
-        method: "PUT",
-
-        headers: {
-            "Content-Type": "application/json"
         },
 
         body: JSON.stringify({
 
             usuario,
+            password,
             rol
 
         })
@@ -168,4 +131,95 @@ async function editarUsuario(id) {
     cargarUsuarios();
 
 }
-    
+
+async function eliminarUsuario(id) {
+
+    if (
+        !confirm(
+            "¿Eliminar usuario?"
+        )
+    ) {
+
+        return;
+
+    }
+
+    const token =
+        localStorage.getItem("token");
+
+    await fetch(
+
+        `/api/usuarios/${id}`,
+
+        {
+
+            method: "DELETE",
+
+            headers: {
+
+                Authorization:
+                    token
+
+            }
+
+        }
+
+    );
+
+    cargarUsuarios();
+
+}
+
+async function editarUsuario(id) {
+
+    const usuario =
+        prompt(
+            "Nuevo usuario:"
+        );
+
+    const rol =
+        prompt(
+            "Nuevo rol:"
+        );
+
+    if (!usuario || !rol) {
+
+        return;
+
+    }
+
+    const token =
+        localStorage.getItem("token");
+
+    await fetch(
+
+        `/api/usuarios/${id}`,
+
+        {
+
+            method: "PUT",
+
+            headers: {
+
+                "Content-Type":
+                    "application/json",
+
+                Authorization:
+                    token
+
+            },
+
+            body: JSON.stringify({
+
+                usuario,
+                rol
+
+            })
+
+        }
+
+    );
+
+    cargarUsuarios();
+
+}
